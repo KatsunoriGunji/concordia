@@ -1,0 +1,10 @@
+@mixin btn{
+  display: inline-block;
+  text-align: center;
+  font-weight: bold;
+  color: white;
+  border-radius: 10px;
+  border-bottom: solid 2px rgb(37, 82, 94);
+  box-shadow: inset 0 2px 0 rgba(255,255,255,0.2), 0 2px 2px rgba(0, 0, 0, 0.19);
+  background-color: #3093AE;
+}

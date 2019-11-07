@@ -1,0 +1,89 @@
+.header{
+  background-color: #3093AE;
+  line-height: 60px;
+  width: 100%;
+}
+.contents{
+  .functions{
+    .chord-determinate{
+      border-color: black;
+      border-style: solid;
+    }
+  }
+  .keys{
+    display: flex;
+    .register{
+      display: flex;
+      .keys-box{
+        height: 210px;
+        .white-key{
+          border-bottom: solid;
+          background-color: white;
+          height: 210px;
+          width: 65px;
+        }
+        .black-key{
+          background-color: black;
+          border-bottom-style: none;
+          height: 120px;
+          width: 36px;
+          position: relative;
+          left: 47px;
+          bottom: 214px;
+        }
+        .key{
+          border: 1px solid;
+          border-color: black;
+          &--selected{
+            border: 1px solid;
+            border-color: black;
+            background-color: red;
+          }
+        }
+      }
+    }
+  }
+  .btn{
+    @include btn;
+    line-height: 30px;
+    width: 100px;
+    margin: 10px 0 10px 0;
+  }
+  .btn:active {
+    border-bottom: solid 2px #fd9535;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.30);
+  }
+  .clearfix::after {
+    content: "";
+    display: block;
+    clear: both;
+  }
+  .pulldowns{
+    select{
+      width: 100%;
+      padding-right: 1em;
+      cursor: pointer;
+      text-indent: 0.01px;
+      text-overflow: ellipsis;
+      border: none;
+      outline: none;
+      background: transparent;
+      background-image: none;
+      box-shadow: none;
+      -webkit-appearance: none;
+      appearance: none;
+
+      height: 30px;
+      width: 70px;
+      border: 1px solid #000000;
+      border-radius: 3px;
+      background: #ffffff;
+    }
+  }
+  .chord-name{
+    min-height: 50px;
+    width: 200px;
+    border: 1px solid;
+    border-color: black;
+  }
+}

@@ -1,0 +1,46 @@
+.header
+  和声Space
+.contents
+  .functions
+  .keys
+    .register{"data-register": 3}
+      = render "keys"
+    .register.clearfix{"data-register": 4}
+      = render "keys"
+  
+  -# .btn#sound
+  -#   再生
+  .btn#clear
+    クリア
+  .pulldowns
+    調を指定
+    %br
+    //%input.tonality{type: "button", value: "調を指定"}
+    %select.tonic-name.tonality{name: "tonic-name"}
+      %option{value: 0}
+        C
+      %option{value: 2}
+        D
+      %option{value: 4}
+        E
+      %option{value: -1}
+        F
+      %option{value: 1}
+        G
+      %option{value: 3}
+        A
+      %option{value: 5}
+        B
+    %select.accidental.tonality{name: "accidental"}
+      %option{value: 0}
+        ♮
+      %option{value: 7}
+        \#
+      %option{value: -7}
+        ♭
+    %select.scale-type.tonality{name: "scale-type"}
+      %option{value: "maj"}
+        長調
+      %option{value: "h_min"}
+        短調
+  .chord-name
