@@ -13,7 +13,7 @@ class ChordController < ApplicationController
       Structure.new(format_notes, root)
     }
     classic_harms = chord_structures.map { |structure|
-      ClassicHarm.new(structure.notes, structure.root, structure.borrowing_key)
+      #ClassicHarm.new(structure.notes, structure.root, structure.borrowing_key(set_tonic, set_scale_type))
     }
     [chord_structures, classic_harms]
   end
