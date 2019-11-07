@@ -125,6 +125,7 @@ class Structure
         when -7
           borrowing_key = -6
         end
+      end
     elsif scale_type = "min"
     end
     borrowing_key
