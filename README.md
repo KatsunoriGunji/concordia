@@ -1,5 +1,6 @@
 # README
 鍵盤をクリックすると和音のコードネームを表示します。
+https://user-images.githubusercontent.com/55086396/68366324-61fd9980-0176-11ea-83e0-2687c98e1ec2.gif
 
 ## Features 
  - 鍵盤をクリックするとリアルタイムでコードネームが表示されます。
