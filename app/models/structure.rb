@@ -2,16 +2,18 @@ include Math
 require 'variables'
 
 class Structure
-  attr_accessor :notes, :root, :relative_degrees, :length
+  attr_accessor :notes, :root, :relative_degrees, :length, :base, :inversion
   include ActiveModel::Model
 
-  def initialize(notes, root)
+  def initialize(notes, root, base)
     @notes = notes
     @root = root
     @relative_degrees = @notes.map { |note|
       note - root
     }
     @length = self.sort.map { |deg, acc| deg }
+    @base = base
+    #@inversion = self.inversion
   end
 
   def sort
@@ -29,7 +31,18 @@ class Structure
       key = note[0]
       position[key.to_s.to_sym] << note[1] if key != 1
     end
-    position
+    return position
+  end
+
+  def inversion
+    deg_inv = ( self.base - self.root ).degree_odd
+    inv = "none"
+    if deg_inv == 1
+      inv = ""
+    elsif deg_inv >= 3 && deg_inv <= 7
+      inv = "/#{base.note_name}"
+    end
+    return inv
   end
 
   def triad
@@ -52,10 +65,16 @@ class Structure
       triad = "sus4"
       self.length.delete(11)
       self.length.push(4)
+    elsif th && !fi
+      triad = " omit5 "
+    elsif !th && fi
+      triad = " omit3 "
+    elsif !th && !fi
+      triad = " omit3 omit5 "
     else
       triad = "?"
     end
-    triad
+    return triad
   end
 
   def seventh
@@ -64,7 +83,7 @@ class Structure
     thirteenth_accidental = self.position[:"13"][0]
     if seventh_accidental.present?
       seventh = ["𝄫", "", "Δ"][ 2 + seventh_accidental ] + "7"
-    elsif thirteenth_accidental == 0
+    elsif thirteenth_accidental == 0 && self.inversion == ""
       seventh = "6"
       self.length.delete(13)
       self.length.push(6)
@@ -74,40 +93,39 @@ class Structure
 
   def tension
     tension = ""
-
-    ninth_accidental      = self.position[:"9"][0]
-    eleventh_accidental   = self.position[:"11"][0]
-    thirteenth_accidental = self.position[:"13"][0]
-
     array_accidental = ["𝄫", "♭", "", "#", "𝄪"]
-    if ninth_accidental.present?
-      tension += "(#{ array_accidental[2 + ninth_accidental] }9)"
-    elsif eleventh_accidental.present? && self.triad != "sus4"
-      tension += "(#{ array_accidental[2 + eleventh_accidental] }11)"
-    elsif thirteenth_accidental.present? && self.seventh != "6"
-      tension += "(#{ array_accidental[2 + thirteenth_accidental] }13)"
-    end
+
+    ninth      = self.position[:"9"][0]
+    eleventh   = self.position[:"11"][0]
+    thirteenth = self.position[:"13"][0]
+
+    tension += "(#{ array_accidental[2 + ninth] }9)"       if ninth.present?
+    tension += "(#{ array_accidental[2 + eleventh] }11)"   if eleventh.present? && self.triad != "sus4"
+    tension += "(#{ array_accidental[2 + thirteenth] }13)" if thirteenth.present? && self.seventh != "6"
+    
     tension.gsub(/\)\(/, ", ")
+    #binding.pry
   end
 
   def borrowing_key(tonic, scale_type) # Structureインスタンスに対して所属する借用調を五度圏表記で表示する
     notes = self.notes
     borrowing_key = ""
-    if scale_type = "maj"
+    if scale_type == "maj"
       notes.map! { |note| note - tonic }
       if notes.min >= -1
-        case notes.max
-        when 6
+        if notes.max <= 5
+          borrowing_key = 0
+        elsif notes.max == 6
           borrowing_key = 1
-        when 7
+        elsif notes.max == 7
           borrowing_key = 2
-        when 8
+        elsif notes.max == 8
           borrowing_key = 3
-        when 9
+        elsif notes.max == 9
           borrowing_key = 4
-        when 10
+        elsif notes.max == 10
           borrowing_key = 5
-        when 11
+        elsif notes.max == 11
           borrowing_key = 6
         end
       elsif notes.max <= 5
@@ -126,9 +144,9 @@ class Structure
           borrowing_key = -6
         end
       end
-    elsif scale_type = "min"
+    elsif scale_type == "min"
     end
-    borrowing_key
+    return borrowing_key
   end
 
 end

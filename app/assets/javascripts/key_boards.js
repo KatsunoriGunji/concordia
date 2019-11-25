@@ -1,9 +1,20 @@
 $(document).on("turbolinks:load", function() {
   var notes = [];
+  function findBase(notes){
+    set = []
+    $(notes).each(function(i, note){
+      num = note.chromatic + 12 * note.register;
+      set.push(num);
+    });
+    base = Math.min.apply(null, set);
+    baseName = base % 12;
+    baseRegister = Math.floor(base / 12);
+    return {name: baseName, register: baseRegister}
+  };
   $(document).on("click", ".key", function(){
     thisKey = this;
     var noteChromatic = $(thisKey).data('chromatic');
-    var noteRegister = $(thisKey).parent().data('register');
+    var noteRegister = $(thisKey).parents('.register').data('register');
     var note = {chromatic: noteChromatic, register: noteRegister};
     $('.chord-name').empty();
     
@@ -18,7 +29,8 @@ $(document).on("turbolinks:load", function() {
       type: 'GET',
       url: '/chord/determinate_chord',
       data: { notes: notes,
-              tonality: tonality
+              tonality: tonality,
+              base: findBase(notes)
       },
       dataType: 'json'
     })
@@ -34,14 +46,14 @@ $(document).on("turbolinks:load", function() {
   $(document).on("click", ".key--selected", function(){
     thisKey = this;
     var noteChromatic = $(thisKey).data('chromatic');
-    var noteRegister = $(thisKey).parent().data('register');
+    var noteRegister = $(thisKey).parents('.register').data('register');
     var note = {chromatic: noteChromatic, register: noteRegister};
     $('.chord-name').empty();
 
     $(thisKey).removeClass("key--selected");
     $(thisKey).addClass("key");
     notes = notes.filter(function(ele){
-      return ele.chromatic != note.chromatic || ele.register != note.register;
+      return ele.chromatic != note.chromatic;
     });
     var tonicName = $(".tonic-name").val();
     var accidental = $(".accidental").val();
@@ -51,7 +63,8 @@ $(document).on("turbolinks:load", function() {
       type: 'GET',
       url: '/chord/determinate_chord',
       data: { notes: notes,
-              tonality: tonality
+              tonality: tonality,
+              base: findBase(notes)
       },
       dataType: 'json'
     })
@@ -73,7 +86,8 @@ $(document).on("turbolinks:load", function() {
       type: 'GET',
       url: '/chord/determinate_chord',
       data: { notes: notes,
-              tonality: tonality
+              tonality: tonality,
+              base: findBase(notes)
       },
       dataType: 'json'
     })
